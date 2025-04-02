@@ -9,6 +9,8 @@ package com.phasmidsoftware.dsaipg.projects.mcts.core;
  */
 public interface Game<G extends Game> {
 
+
+
     /**
      * Get the starting state for this Game.
      *
