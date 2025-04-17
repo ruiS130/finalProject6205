@@ -53,34 +53,89 @@ public class GoGameGUI_B implements ActionListener {
 		bt_Win.addActionListener(this);
 		jf.add(jp, BorderLayout.WEST);
 		jf.add(CBPanel, BorderLayout.CENTER);
+//		CBPanel.addMouseListener(new MouseAdapter() {
+//			public void mouseClicked(MouseEvent e) {
+//				// 获取当前鼠标坐标
+//				int x = e.getX();
+//				int y = e.getY();
+//				System.out.println(x + "  " + y);
+//				jl_Message2.setText("Welcome");
+//				// 棋盘外落子无效
+//				if (x < 30 || x > 570 || y < 30 || y > 570)
+//					return;
+//				// 落子
+//				int work=CBPanel.playChess(x, y);
+//
+//				int turn=0;
+//				int step=0;
+//				turn=CBPanel.getTurnflag();
+//				step=CBPanel.getStep();
+//				if(step%2==0)
+//				   jl_Turn2.setText("黑方");
+//				else
+//					 jl_Turn2.setText("白方");
+//				jl_Step2.setText(step+"");
+//				if(work==-1)
+//					jl_Message2.setText("无效下棋");
+//
+//			}
+//		});
 		CBPanel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				// 获取当前鼠标坐标
+				// 获取鼠标坐标
 				int x = e.getX();
 				int y = e.getY();
 				System.out.println(x + "  " + y);
 				jl_Message2.setText("Welcome");
+
 				// 棋盘外落子无效
 				if (x < 30 || x > 570 || y < 30 || y > 570)
 					return;
-				// 落子
-				int work=CBPanel.playChess(x, y);
-				
-				int turn=0;
-				int step=0;
-				turn=CBPanel.getTurnflag();
-				step=CBPanel.getStep();
-				if(step%2==0)
-				   jl_Turn2.setText("黑方");
+
+				// 玩家落子
+				int work = CBPanel.playChess(x, y);
+				int turn = CBPanel.getTurnflag();
+				int step = CBPanel.getStep();
+				if (step % 2 == 0)
+					jl_Turn2.setText("黑方");
 				else
-					 jl_Turn2.setText("白方");
-				jl_Step2.setText(step+"");
-				if(work==-1) 
+					jl_Turn2.setText("白方");
+				jl_Step2.setText(step + "");
+				if (work == -1)
 					jl_Message2.setText("无效下棋");
-				
+
+				// 当玩家落子后，若游戏还未结束且当前回合为 AI（例如 turn == -1 表示 AI 落子），
+				// 则自动调用 MCSTAgent.nextMove
+				if (CBPanel.getTurnflag() == -1) {
+					// 从棋盘获取当前棋谱状态
+					int[][] currentMap = CBPanel.getChessMap();
+					int currentTurn = CBPanel.getTurnflag();
+					// 调用 MCSTAgent 的 nextMove 得到最佳落子 [row, col]
+					int[] aiMove = MCSTAgent.nextMove(currentMap, currentTurn);
+					if (aiMove != null) {
+						System.out.println("AI 落子点: " + aiMove[0] + "," + aiMove[1]);
+						int aiResult = CBPanel.playChessAI(aiMove[0], aiMove[1], currentTurn);
+						if (aiResult != -1) {
+							// 更新界面显示：根据新的手数和回合更新标签
+							int newTurn = CBPanel.getTurnflag();
+							int newStep = CBPanel.getStep();
+							if (newStep % 2 == 0)
+								jl_Turn2.setText("黑方");
+							else
+								jl_Turn2.setText("白方");
+							jl_Step2.setText(newStep + "");
+							jl_Message2.setText("AI 落子完成");
+						} else {
+							jl_Message2.setText("AI 落子无效");
+						}
+					} else {
+						jl_Message2.setText("AI 无法找到合法着法");
+					}
+				}
 			}
 		});
-		
+
+
 		jf.setSize(706, 637);
 		jf.setVisible(true);
 		jf.setResizable(false);
