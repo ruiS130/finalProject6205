@@ -654,6 +654,48 @@ public class ChessBoardPanel_B extends JPanel {
 		}
 	}
 
+	// 新增方法：直接以棋谱坐标(row, col)和当前回合（turn）落子
+	public int playChessAI(int row, int col, int turn) {
+		// 检查目标位置是否有棋子
+		if (ChessMap[row][col] != 0) {
+			System.out.println("位置已有棋子: " + row + "," + col);
+			return -1;
+		}
+		// 将棋谱更新
+		setChessMap(row, col, turn);
+		// 为所有棋子更新邻接组（这里使用原有逻辑）
+		for (int i = 0; i < getROWS(); i++) {
+			for (int j = 0; j < getROWS(); j++) {
+				ChessPoint[i][j].setX_Map(i);
+				ChessPoint[i][j].setY_Map(j);
+				GenerateGruopforsinglechess(i, j);
+			}
+		}
+		step++; // 增加手数
+
+		// 有气，落子有效
+		if (countAir(row, col) != 0) {
+			renewChessMap();
+			AddtoMemery(ChessMap, step, Turnflag);
+			repaint();
+			showChessMap(ChessMap);
+			// 切换回合标记
+			if (Turnflag == 1)
+				Turnflag = -1;
+			else
+				Turnflag = 1;
+			return 1;
+		} else {
+			// 若该着法无气，则按原有逻辑处理（例如捕捉对手棋子）
+			// ...（这里可参考 playChess 方法中的逻辑）
+			// 为简单起见，若无气则撤销此着法
+			setChessMap(row, col, 0);
+			System.out.println("AI 落子无气，不合法: " + row + "," + col);
+			return -1;
+		}
+	}
+
+
 	public int getROWS() {
 		return ROWS;
 	}
