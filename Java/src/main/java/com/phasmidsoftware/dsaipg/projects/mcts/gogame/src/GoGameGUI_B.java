@@ -30,10 +30,10 @@ public class GoGameGUI_B implements ActionListener {
 		bt_Win=new JButton("Game Status");
 		jl_Turn1=new JLabel("Now Moving");
 	    jl_Turn2=new JLabel("Black");
-	    jl_Step1=new JLabel("Round Num");
+	    jl_Step1=new JLabel("Round Number\n");
 	    jl_Step2=new JLabel("0");
-	    jl_Message1=new JLabel("System:");
-	    jl_Message2=new JLabel("Welcome!");
+	    jl_Message1=new JLabel("");
+	    jl_Message2=new JLabel("");
 	
 		JPanel jp = new JPanel();
 		//jp.setLayout(new GridLayout(2, 1, 3, 3));
@@ -86,7 +86,7 @@ public class GoGameGUI_B implements ActionListener {
 				int x = e.getX();
 				int y = e.getY();
 				System.out.println(x + "  " + y);
-				jl_Message2.setText("Welcome");
+				jl_Message2.setText("");
 
 				// 棋盘外落子无效
 				if (x < 30 || x > 570 || y < 30 || y > 570)
