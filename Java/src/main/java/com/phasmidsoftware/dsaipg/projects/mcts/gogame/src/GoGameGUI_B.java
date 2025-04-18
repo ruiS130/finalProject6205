@@ -21,19 +21,19 @@ public class GoGameGUI_B implements ActionListener {
 	JLabel jl_Turn1,jl_Turn2,jl_Step1,jl_Step2,jl_Message1,jl_Message2;
 	
 	GoGameGUI_B() {
-		JFrame jf = new JFrame("GOGame单机版");
+		JFrame jf = new JFrame("Game of GO");
         //创建棋盘绘制面板
 		this.CBPanel =new ChessBoardPanel_B();
 		//添加鼠标点击事件	
-		bt_newGame = new JButton("重新开始");
-		bt_Back = new JButton("悔棋");
-		bt_Win=new JButton("胜负判断");
-		jl_Turn1=new JLabel("当前回合");
-	    jl_Turn2=new JLabel("黑方");
-	    jl_Step1=new JLabel("手数");
+		bt_newGame = new JButton("New Game");
+		bt_Back = new JButton("Undo");
+		bt_Win=new JButton("Game Status");
+		jl_Turn1=new JLabel("Now Moving");
+	    jl_Turn2=new JLabel("Black");
+	    jl_Step1=new JLabel("Round Num");
 	    jl_Step2=new JLabel("0");
-	    jl_Message1=new JLabel("系统消息");
-	    jl_Message2=new JLabel("Welcom!");
+	    jl_Message1=new JLabel("System:");
+	    jl_Message2=new JLabel("Welcome!");
 	
 		JPanel jp = new JPanel();
 		//jp.setLayout(new GridLayout(2, 1, 3, 3));
@@ -97,12 +97,12 @@ public class GoGameGUI_B implements ActionListener {
 				int turn = CBPanel.getTurnflag();
 				int step = CBPanel.getStep();
 				if (step % 2 == 0)
-					jl_Turn2.setText("黑方");
+					jl_Turn2.setText("Black");
 				else
-					jl_Turn2.setText("白方");
+					jl_Turn2.setText("White");
 				jl_Step2.setText(step + "");
 				if (work == -1)
-					jl_Message2.setText("无效下棋");
+					jl_Message2.setText("Invalid Move");
 
 				// 当玩家落子后，若游戏还未结束且当前回合为 AI（例如 turn == -1 表示 AI 落子），
 				// 则自动调用 MCSTAgent.nextMove
@@ -120,16 +120,16 @@ public class GoGameGUI_B implements ActionListener {
 							int newTurn = CBPanel.getTurnflag();
 							int newStep = CBPanel.getStep();
 							if (newStep % 2 == 0)
-								jl_Turn2.setText("黑方");
+								jl_Turn2.setText("Black");
 							else
-								jl_Turn2.setText("白方");
+								jl_Turn2.setText("White");
 							jl_Step2.setText(newStep + "");
-							jl_Message2.setText("AI 落子完成");
+							jl_Message2.setText("AI Finished");
 						} else {
-							jl_Message2.setText("AI 落子无效");
+							jl_Message2.setText("AI Invalid Move");
 						}
 					} else {
-						jl_Message2.setText("AI 无法找到合法着法");
+						jl_Message2.setText("AI Cannot Move");
 					}
 				}
 			}
@@ -156,16 +156,16 @@ public class GoGameGUI_B implements ActionListener {
 			turn=CBPanel.getTurnflag();
 			step=CBPanel.getStep();
 			if(step%2==0) {
-			   jl_Turn2.setText("黑 方");
-			   jl_Message2.setText("黑方悔棋");
+			   jl_Turn2.setText("Black");
+			   jl_Message2.setText("Black Regret");
 			}
 			else {
-				 jl_Turn2.setText("白 方");
-				 jl_Message2.setText("白方悔棋");
+				 jl_Turn2.setText("White");
+				 jl_Message2.setText("White Regret");
 				 }
 			jl_Step2.setText(step+"");
 			if(work==-1) 
-				jl_Message2.setText("无子可悔！");
+				jl_Message2.setText("No Regret");
 			
 		}
 		if(e.getSource()==bt_newGame) {
@@ -176,23 +176,23 @@ public class GoGameGUI_B implements ActionListener {
 			turn=CBPanel.getTurnflag();
 			step=CBPanel.getStep();
 			if(turn==1)
-			   jl_Turn2.setText("黑 方");
+			   jl_Turn2.setText("Black");
 			else
-				 jl_Turn2.setText("白 方");
+				 jl_Turn2.setText("White");
 			jl_Step2.setText(step+"");
-			jl_Message2.setText("新       局");
+			jl_Message2.setText("New Game Start");
 		
 		}
 		if(e.getSource()==bt_Win) {
 			int i=CBPanel.Winner();
 			if(i==1) {
-				jl_Message2.setText("黑方胜利");
+				jl_Message2.setText("Black Won!");
 			}
 			if(i==-1) {
-				jl_Message2.setText("白方胜利 ");
+				jl_Message2.setText("White Won!");
 			}
 			if(i==0) {
-				jl_Message2.setText(" 平     局");
+				jl_Message2.setText("Draw");
 			}
 		}
 	}

@@ -200,9 +200,9 @@ public class ChessBoardPanel_B extends JPanel {
 	// 棋盘初始化
 	public ChessBoardPanel_B() {
 
-		boardImg = Toolkit.getDefaultToolkit().getImage("src/main/java/com/phasmidsoftware/dsaipg/projects/mcts/gogame/src/images/boardbackground.jpg");
-		whiteImg = Toolkit.getDefaultToolkit().getImage("src/main/java/com/phasmidsoftware/dsaipg/projects/mcts/gogame/src/images/white.png");
-		blackImg = Toolkit.getDefaultToolkit().getImage("src/main/java/com/phasmidsoftware/dsaipg/projects/mcts/gogame/src/images/black.png");
+		boardImg = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/boardbackground.jpg"));
+		whiteImg = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/white.png"));
+		blackImg = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/black.png"));
 		ChessMap = new int[ROWS][ROWS];
 		// 棋谱初始化
 		for (int i = 0; i < ROWS; i++) {
