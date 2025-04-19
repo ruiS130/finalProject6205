@@ -22,9 +22,9 @@ public class GoGameGUI_B implements ActionListener {
 	
 	GoGameGUI_B() {
 		JFrame jf = new JFrame("Game of GO");
-        //创建棋盘绘制面板
+		// Create game panel
 		this.CBPanel =new ChessBoardPanel_B();
-		//添加鼠标点击事件	
+		// Initialize buttons and labels
 		bt_newGame = new JButton("New Game");
 		bt_Back = new JButton("Undo");
 		bt_Win=new JButton("Game Status");
@@ -34,7 +34,8 @@ public class GoGameGUI_B implements ActionListener {
 	    jl_Step2=new JLabel("0");
 	    jl_Message1=new JLabel("");
 	    jl_Message2=new JLabel("");
-	
+
+		// Side panel
 		JPanel jp = new JPanel();
 		//jp.setLayout(new GridLayout(2, 1, 3, 3));
 		jp.setPreferredSize(new Dimension(92,600));
@@ -48,9 +49,11 @@ public class GoGameGUI_B implements ActionListener {
 		jp.add(jl_Step1);
 		jp.add(jl_Step2);
 		jp.add(jl_Message1);jp.add(jl_Message2);
+		// Register button listeners
 		bt_Back.addActionListener(this);
 		bt_newGame.addActionListener(this);
 		bt_Win.addActionListener(this);
+		// Add components to frame
 		jf.add(jp, BorderLayout.WEST);
 		jf.add(CBPanel, BorderLayout.CENTER);
 //		CBPanel.addMouseListener(new MouseAdapter() {
@@ -80,19 +83,21 @@ public class GoGameGUI_B implements ActionListener {
 //
 //			}
 //		});
+
+		// Mouse listener for placing a move
 		CBPanel.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				// 获取鼠标坐标
+				// Get mouse coordinates
 				int x = e.getX();
 				int y = e.getY();
 				System.out.println(x + "  " + y);
 				jl_Message2.setText("");
 
-				// 棋盘外落子无效
+				// Ignore clicks outside the board
 				if (x < 30 || x > 570 || y < 30 || y > 570)
 					return;
 
-				// 玩家落子
+				// Player move
 				int work = CBPanel.playChess(x, y);
 				int turn = CBPanel.getTurnflag();
 				int step = CBPanel.getStep();
@@ -104,19 +109,18 @@ public class GoGameGUI_B implements ActionListener {
 				if (work == -1)
 					jl_Message2.setText("Invalid Move");
 
-				// 当玩家落子后，若游戏还未结束且当前回合为 AI（例如 turn == -1 表示 AI 落子），
-				// 则自动调用 MCSTAgent.nextMove
+				// AI move logic (after player move if AI's turn)
 				if (CBPanel.getTurnflag() == -1) {
-					// 从棋盘获取当前棋谱状态
+					// Get current board state
 					int[][] currentMap = CBPanel.getChessMap();
 					int currentTurn = CBPanel.getTurnflag();
-					// 调用 MCSTAgent 的 nextMove 得到最佳落子 [row, col]
+					// Call MCSTAgent to get the best move [row, col]
 					int[] aiMove = MCSTAgent.nextMove(currentMap, currentTurn);
 					if (aiMove != null) {
-						System.out.println("AI 落子点: " + aiMove[0] + "," + aiMove[1]);
+						System.out.println("AI placed a piece at: " + aiMove[0] + "," + aiMove[1]);
 						int aiResult = CBPanel.playChessAI(aiMove[0], aiMove[1], currentTurn);
 						if (aiResult != -1) {
-							// 更新界面显示：根据新的手数和回合更新标签
+							// Update UI after a valid AI move
 							int newTurn = CBPanel.getTurnflag();
 							int newStep = CBPanel.getStep();
 							if (newStep % 2 == 0)
