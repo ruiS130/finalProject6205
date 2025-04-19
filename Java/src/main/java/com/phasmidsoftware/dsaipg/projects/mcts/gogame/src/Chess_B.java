@@ -3,12 +3,12 @@ package com.phasmidsoftware.dsaipg.projects.mcts.gogame.src;
 import java.io.Serializable;
 import java.util.Vector;
 
-//棋子类
+//Represents a stone (chess piece) on the Go board.
 public class Chess_B implements Serializable{
-	private int Color = 0;// 棋子颜色
-	private int x_Map=-1,y_Map=-1;//棋子棋谱坐标    初始值为-1，表示不存在
-	private int x_Point, y_Point;// 棋子坐标
-	private Vector vCurrentGroup=null;
+	private int Color = 0;// Color of the piece (1 = Black, -1 = White, 0 = Empty)
+	private int x_Map=-1,y_Map=-1;// Coordinates on the board (index in board array), -1 = not placed
+	private int x_Point, y_Point;// Pixel coordinates for drawing
+	private Vector vCurrentGroup=null;// The group this stone currently belongs to
 	public Vector getvCurrentGroup() {
 		return vCurrentGroup;
 	}
@@ -17,8 +17,8 @@ public class Chess_B implements Serializable{
 		this.vCurrentGroup = vBelongto;
 	}
 
-	private int Qi=4;// 气数
-	private int alive=0;//棋子死活标记，0死，1活；
+	private int Qi=4;// Number of liberties (initially 4)
+	private int alive=0;// Life status: 0 = dead, 1 = alive (optional usage)
 	
 	public int getX_Map() {
 		return x_Map;

@@ -5,16 +5,17 @@ import java.util.Vector;
 public class Memeryunit_B {
 
    
-	private final int ROWS = 19;// 棋盘行列数
-	private int M_Turnflag ;// 回合标记
-	private int[][] M_ChessMap=new int[ROWS][ROWS];//
-	private int M_step=0 ;// 统计手数
+	private final int ROWS = 19;// Board size (19x19)
+	private int M_Turnflag ;// Turn flag (1 for Black, -1 for White)
+	private int[][] M_ChessMap=new int[ROWS][ROWS];// Board state
+	private int M_step=0 ;// Number of steps/moves
 
-	
+	// Default constructor
 	Memeryunit_B() {
 		
 	}
-	
+
+	// Constructor with state copy
 	Memeryunit_B(int[][] m_ChessMap,int m_step,int m_Turnflag){
 		for(int i=0;i<ROWS;i++) {
 			for(int j=0;j<ROWS;j++) {
@@ -26,7 +27,7 @@ public class Memeryunit_B {
 		this.M_step=m_step;
 	}
 
-	
+	// Getters and setters
 	public int getM_Turnflag() {
 		return M_Turnflag;
 	}

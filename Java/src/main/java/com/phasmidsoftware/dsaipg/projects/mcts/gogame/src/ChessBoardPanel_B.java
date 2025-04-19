@@ -5,36 +5,36 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
-//棋盘类
+// Chessboard panel class
 public class ChessBoardPanel_B extends JPanel {
 
-	private Vector MapMemery = new Vector();// 参数记忆数组
-	
-	// 棋盘参数
-	// 固定参数
-	public final static int extent = 10;// 鼠标精度
+	private Vector MapMemery = new Vector(); // Memory array for storing states
+
+	// Chessboard parameters
+	// Fixed parameters
+	public final static int extent = 10;// Mouse precision
 	public static int[] xdir = { 0, 0, 1, -1 };
 	public static int[] ydir = { 1, -1, 0, 0 };
-	public Image boardImg, blackImg, whiteImg;// 棋盘、棋子图像
-	private final int ROWS = 19;// 棋盘行列数
-	private final int margin = 30;// 划线边距
-	private int span;// 棋盘间距
-	private int Work = 1;// 落子是否有效
+	public Image boardImg, blackImg, whiteImg;// Board, black piece, white piece
+	private final int ROWS = 19;// Number of rows/columns
+	private final int margin = 30;// Line margin
+	private int span;// Board spacing
+	private int Work = 1;// Whether move is valid
 
-	// 变化参数
-	///////////////////////////////////////// 信息块////////////////////////////////////////
-	private Vector vAllGroup = new Vector();// 总块
-	private Vector CurrentRemovedGruop = new Vector();// 当前被提走的邻居组
 
-	private int[][] ChessMap;// 棋谱坐标
-	private Chess_B[][] ChessPoint = new Chess_B[ROWS][ROWS];// 棋盘坐标
-	private int blackSize = 0, whiteSize = 0;// 黑白目数
-	
-	private int step = 0;// 统计手数
+	///////////////////////////////////////// Info block ////////////////////////////////////////
+	private Vector vAllGroup = new Vector(); // All groups
+	private Vector CurrentRemovedGruop = new Vector(); // Currently removed neighbor group
 
-	private int Turnflag = 1;// 回合标记
-	private int CurrentMapPoint_X, CurrentMapPoint_Y;// 当前鼠标点击对应的交叉点坐标，若值为-1则视为无效点击
-	////////////////////////////////////////// 信息块//////////////////////////////////////////
+	private int[][] ChessMap; // Board coordinates
+	private Chess_B[][] ChessPoint = new Chess_B[ROWS][ROWS]; // Board coordinate objects
+	private int blackSize = 0, whiteSize = 0; // Black and white territory counts
+
+	private int step = 0; // Step counter
+
+	private int Turnflag = 1; // Turn flag
+	private int CurrentMapPoint_X, CurrentMapPoint_Y; // Mouse-click grid position, -1 = invalid
+	////////////////////////////////////////// Info block ////////////////////////////////////////
 
 	public int Winner() {
 		blackSize=0;
@@ -125,21 +125,21 @@ public class ChessBoardPanel_B extends JPanel {
 		int y_high = margin;
 		int y_low = Height - margin;
 
-		g.drawImage(boardImg, 0, 0, 600, 600, null);// 绘制背景
+		g.drawImage(boardImg, 0, 0, 600, 600, null);// Draw the background image
 
-		int span_x = (y_low - y_high) / (ROWS - 1);// 棋盘间距—x轴
-		int span_y = (x_right - x_left) / (ROWS - 1);// 棋盘间距-y轴
+		int span_x = (y_low - y_high) / (ROWS - 1);// Board spacing - x-axis
+		int span_y = (x_right - x_left) / (ROWS - 1);// Board spacing - y-axis
 		span = span_x;
-		int x1 = margin, y1 = margin, x2 = margin, y2 = margin;// 绘点坐标
+		int x1 = margin, y1 = margin, x2 = margin, y2 = margin;// Coordinates for drawing
 
-		// 画横线
+		// Draw horizontal lines
 		for (int i = 0; i < ROWS; i++) {
 			x1 = x_left;
 			x2 = x_right;
 			y1 = y2 = margin + i * span_y;
 			g.drawLine(x1, y1, x2, y2);
 		}
-		// 画竖线
+		// Draw vertical lines
 		for (int i = 0; i < ROWS; i++) {
 			y1 = margin;
 			y2 = Height - margin;
@@ -147,20 +147,20 @@ public class ChessBoardPanel_B extends JPanel {
 			g.drawLine(x1, y1, x2, y2);
 		}
 
-		// 绘制星卫位置
-		g.setColor(Color.BLACK);  // 星卫标记颜色
+		// Draw star point positions
+		g.setColor(Color.BLACK);  // Star point marker color
 		for (int[] star : starPoints) {
 			int x = star[0], y = star[1];
 			int starX = ChessPoint[x][y].getX_Point();
 			int starY = ChessPoint[x][y].getY_Point();
-			g.fillOval(starX - 5, starY - 5, 10, 10);  // 绘制红色圆圈标记星卫
+			g.fillOval(starX - 5, starY - 5, 10, 10); // Draw black circle to mark star point
 		}
 
-		// 依据棋谱绘制棋局
+		// Draw the chessboard state based on the game record
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 				if (ChessMap[j][i] != 0) {
-					if (ChessMap[j][i] == 1) {
+					if (ChessMap[j][i] == 1) { // Black piece
 						if (step < 2) {
 							for (int k = 0; k < 2000; k++) {
 								g.drawImage(blackImg, ChessPoint[j][i].getX_Point() - span / 2,
@@ -174,7 +174,7 @@ public class ChessBoardPanel_B extends JPanel {
 								ChessPoint[j][i].getY_Point() - span / 2, span, span, null);
 
 					}
-					if (ChessMap[j][i] == -1) {
+					if (ChessMap[j][i] == -1) { // White piece
 						if (step < 3) {
 							for (int k = 0; k < 2000; k++) {
 								g.drawImage(whiteImg, ChessPoint[j][i].getX_Point() - span / 2,
@@ -197,20 +197,20 @@ public class ChessBoardPanel_B extends JPanel {
 		System.out.println("MapMemerylength " + MapMemery.size() + " " + MapMemery);
 	}
 
-	// 棋盘初始化
+	// Initialize the board
 	public ChessBoardPanel_B() {
 
 		boardImg = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/boardbackground.jpg"));
 		whiteImg = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/white.png"));
 		blackImg = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/black.png"));
 		ChessMap = new int[ROWS][ROWS];
-		// 棋谱初始化
+		// Initialize the board map
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 				ChessMap[i][j] = 0;
 			}
 		}
-		// 生成棋盘坐标
+		// Generate board coordinates
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 
@@ -222,15 +222,15 @@ public class ChessBoardPanel_B extends JPanel {
 		}
 		MapMemery.removeAllElements();
 		vAllGroup.removeAllElements();
-		// 在控制台打印
+		// Print to console
 		showChessPointMap();
 		AddtoMemery(ChessMap, step, Turnflag);
 		
 	}
 
-	
-	// 落子函数
-	public int playChess(int x, int y) {// 传入当前鼠标对应的棋谱坐标
+
+	// Place a piece
+	public int playChess(int x, int y) {// Receives coordinates from the current mouse click
 		vAllGroup.removeAllElements();
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < ROWS; j++) {
@@ -238,23 +238,23 @@ public class ChessBoardPanel_B extends JPanel {
 
 			}
 		}
-		// 判断点击位置
-		// 无效落子
+		// Check if the clicked position is valid
+		// Invalid move
 		if (judgeonMapPoint(x, y) == 0) {
 			System.out.println("return");
 			return 0;
 		}
 		System.out.println(CurrentMapPoint_X + "," + CurrentMapPoint_Y);
 
-		// 落子处已经有棋子
+		// A piece already exists at the move location
 		if (ChessMap[CurrentMapPoint_X][CurrentMapPoint_Y] != 0) {
 			System.out.println("alreadyhaspoint:  " + CurrentMapPoint_X + "," + CurrentMapPoint_Y);
 			return -1;
 		}
 
-		// 暂时修改棋谱
+		// Temporarily update the board map
 		setChessMap(CurrentMapPoint_X, CurrentMapPoint_Y, Turnflag);
-		// 为每个落子寻找邻居组
+		// Find neighbor groups for each piece
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < ROWS; j++) {
 
@@ -263,16 +263,14 @@ public class ChessBoardPanel_B extends JPanel {
 				GenerateGruopforsinglechess(i, j);
 			}
 		}
-		step++;// 手数+1
+		step++;// Increase move count
 		// addMap();
-		// 有气，落子存活
+		// If the piece has liberties, it's a valid move
 		if (countAir(CurrentMapPoint_X, CurrentMapPoint_Y) != 0) {
 			System.out.println("qi:" + countAir(CurrentMapPoint_X, CurrentMapPoint_Y));
 
-			// 刷新棋谱
 			renewChessMap();
 			AddtoMemery(ChessMap, step, Turnflag);
-			// 重绘
 			repaint();
 
 			showChessMap(ChessMap);
@@ -285,16 +283,15 @@ public class ChessBoardPanel_B extends JPanel {
 			return 1;
 
 		}
-		// 如果当前位置落子造成落子无气
+		// If the placed piece has no liberties
 		if (countAir(CurrentMapPoint_X, CurrentMapPoint_Y) == 0) {
 
-			// 为落子寻找邻居组		
-			// 若落子所在组有气
+			// Find the neighbor group of the placed piece
+			// If the group has liberties
 			if (GruopAir(ChessPoint[CurrentMapPoint_X][CurrentMapPoint_Y].getvCurrentGroup()) != 0) {
 
 				System.out.println(
 						"group qi:" + GruopAir(ChessPoint[CurrentMapPoint_X][CurrentMapPoint_Y].getvCurrentGroup()));
-				// 重绘				
 				renewChessMap();
 				AddtoMemery(this.ChessMap, this.step, this.Turnflag);
 				// AddtoMemery(ChessMap, ChessPoint,vAllGroup,CurrentRemovedGruop, step,
@@ -310,24 +307,24 @@ public class ChessBoardPanel_B extends JPanel {
 
 				return 1;
 			}
-			
-			// 若落子所在组无气，判断落子周围是否有异色邻居组
+
+			// If the group has no liberties, check for enemy groups around
 			if (GruopAir(ChessPoint[CurrentMapPoint_X][CurrentMapPoint_Y].getvCurrentGroup()) == 0) {
-				int aliveflag = 0;// 死气标签
-				// 获取周围所有异色邻居组
+				int aliveflag = 0;// Dead stone flag
+				// Get all enemy neighbor groups
 				Vector vGroupunsamearound = getUnSamearound(CurrentMapPoint_X, CurrentMapPoint_Y);
-				// 依次判断每个异色邻居组是否有气
+				// Check if any enemy neighbor groups have liberties
 				for (int i = 0; i < vGroupunsamearound.size(); i++) {
 
-					Vector vunsamearound = (Vector) vGroupunsamearound.elementAt(i);// 当前异色邻居组
-					// 如果当前异色邻居组无气，则将该异色邻居组从棋谱上提走
+					Vector vunsamearound = (Vector) vGroupunsamearound.elementAt(i);// Current enemy neighbor group
+					// If enemy group has no liberties, remove it from the board
 					if (GruopAir(vunsamearound) == 0) {
 						for (int j = 0; j < vunsamearound.size(); j++) {
 							int X, Y;
 							Chess_B CH = (Chess_B) vunsamearound.elementAt(j);
 							X = CH.getX_Map();
 							Y = CH.getY_Map();
-							setChessMap(X, Y, 0);// 提子
+							setChessMap(X, Y, 0);// Capture
 							ChessPoint[X][Y].setvCurrentGroup(null);
 							aliveflag = 1;
 						}					
@@ -336,14 +333,13 @@ public class ChessBoardPanel_B extends JPanel {
 				}
 
 				if (aliveflag == 0) {
-					// 将落子移除
-					// 从棋谱中移除
+					// Remove the placed piece (suicide move)
 					setChessMap(CurrentMapPoint_X, CurrentMapPoint_Y, 0);
 					System.out.println("无效下棋");
 					if (step > 0)
 						step--;
 					showChessMap(ChessMap);
-					// deletMap(AllMaplength);// 移除棋谱
+					// deletMap(AllMaplength)
 					return -1;
 				} else {
 					renewChessMap();
@@ -365,19 +361,19 @@ public class ChessBoardPanel_B extends JPanel {
 		return 0;
 	}
 
-	// 添加记忆单元
+	// Add memory unit
 	public void c(int[][] m_ChessMap, int m_step, int m_Turnflag) {
 		this.MapMemery.addElement(new Memeryunit_B(m_ChessMap, m_step, m_Turnflag));
 
 	}
 
-	// 删除最新的记忆单元
+	// Delete the most recent memory unit
 	public void DeletMemery() {
 		MapMemery.remove(MapMemery.elementAt(MapMemery.size()));
 
 	}
 
-	// 悔棋
+	// Undo move
 	public int Back() {
 
 		if (step == 0 || MapMemery.size() == 1) {
@@ -407,7 +403,7 @@ public class ChessBoardPanel_B extends JPanel {
 
 	}
 
-	// 打印棋谱
+	// Print the board state
 	public void showChessMap(int[][] Chessmap) {
 		System.out.println("@" + Chessmap);
 		for (int i = 0; i < ROWS; i++) {
@@ -424,7 +420,7 @@ public class ChessBoardPanel_B extends JPanel {
 		System.out.println("@" + Chessmap);
 	}
 
-	// 计算任意任意位置棋子气数
+	// Count liberties at a given position
 	public int countAir(int x, int y) {
 		int Air = 4;
 		for (int l = 0; l < xdir.length; l++) {
@@ -441,7 +437,7 @@ public class ChessBoardPanel_B extends JPanel {
 
 	}
 
-	// 打印棋盘坐标
+	// Print board coordinate info
 	public void showChessPointMap() {
 		for (int i = 0; i < ROWS; i++) {
 			for (int j = 0; j < ROWS; j++) {
@@ -454,21 +450,22 @@ public class ChessBoardPanel_B extends JPanel {
 		}
 	}
 
-	// 判断鼠标点击是否选中了棋盘上的点
+	// Determine if a mouse click hit a valid board point
+
 	
 	public int judgeonMapPoint(int x, int y) {
-		// 计算中心坐标和中心周围四顶点坐标
+		// Compute the center and corners of the clicked square
 //		x1     x2
 //		    c
 //		x4     x3
 		int c1 = x / 30, c2 = y / 30;
-		int x1 = c1 * 30, y1 = c2 * 30, // 正方形四角，左上
-				x2 = (c1 + 1) * 30, y2 = c2 * 30, // 右上
-				x3 = (c1 + 1) * 30, y3 = (c2 + 1) * 30, // 右下（基准点）
-				x4 = c1 * 30, y4 = (c2 + 1) * 30, // 左下
-				center_x = (x1 + x2) / 2, center_y = (y2 + y3) / 2;// 中心点
+		int x1 = c1 * 30, y1 = c2 * 30, // Top-left corner of the square
+				x2 = (c1 + 1) * 30, y2 = c2 * 30, // Top-right corner
+				x3 = (c1 + 1) * 30, y3 = (c2 + 1) * 30, // Bottom-right corner (reference point)
+				x4 = c1 * 30, y4 = (c2 + 1) * 30, // Bottom-left corner
+				center_x = (x1 + x2) / 2, center_y = (y2 + y3) / 2;// Center point of the square
 		System.out.println(center_x + " " + center_y);
-// 判定鼠标坐标是否在合法范围
+		// Check which quadrant the click is in and validate
 		if (x < center_x && y < center_y) {
 			System.out.println("x1");
 			if ((x > x1 - extent && x < x1 + extent) && (y > y1 - extent && y < y1 + extent)) {
@@ -525,7 +522,7 @@ public class ChessBoardPanel_B extends JPanel {
 			return 0;
 	}
 
-	// 棋谱刷新函数，移走气为零的块
+	// Refresh board state and remove groups with no liberties
 	public void renewChessMap() {
 		// CurrentRemovedGruop.removeAllElements();
 		for (int i = 0; i < vAllGroup.size(); i++) {
@@ -545,13 +542,13 @@ public class ChessBoardPanel_B extends JPanel {
 		}
 	}
 
-	// 修改棋谱
+	// Update board map with a new move
 	public void setChessMap(int x, int y, int flag) {
 		ChessMap[x][y] = flag;
 
 	}
 
-	// 获得指定位置棋子四周的异色邻居组
+	// Get enemy groups adjacent to a piece
 	public Vector getUnSamearound(int x, int y) {
 		Vector v = new Vector();
 		int X, Y;
@@ -567,7 +564,7 @@ public class ChessBoardPanel_B extends JPanel {
 		return v;
 	}
 
-// 获得指定位置棋子四周的同色邻居组
+	// Get enemy groups adjacent to a piece
 	public Vector getSamearound(int x, int y) {
 
 		Vector v = new Vector();
@@ -584,7 +581,7 @@ public class ChessBoardPanel_B extends JPanel {
 		return v;
 	}
 
-	// 计算邻居组的气
+	// Count liberties for a group
 	public int GruopAir(Vector group) {
 		int Air = 0;
 		int x, y;
@@ -598,34 +595,34 @@ public class ChessBoardPanel_B extends JPanel {
 		return Air;
 	}
 
-	// 为单个棋子寻找邻居组
+	// Assign a group to a single stone
 	public void GenerateGruopforsinglechess(int x, int y) {
-		// 当前位置无棋子
+		// No stone at current position
 		if (ChessMap[x][y] == 0) {
 			System.out.print("No Chesshere");
 			return;
 		}
-		// 当前位置的棋子已经有邻居组
+		// Stone already has a group
 		if (ChessPoint[x][y].getvCurrentGroup() != null) {
 			System.out.println("already has gruop" + ChessPoint[x][y].getvCurrentGroup());
 			return;
 		}
 
-		// 遍历棋子四周，如果周围没有同色棋子则为当前棋子创建新的邻居组
+		// Check surroundings: if no same-colored neighbors, create a new group
 		Vector samevaround = getSamearound(x, y);
 		if (samevaround.size() == 0) {
 			Vector vnewgroup = new Vector();
 			vnewgroup.addElement(ChessPoint[x][y]);
-			// 修改棋子邻居组标签
+			// Set the group reference for the stone
 			ChessPoint[x][y].setvCurrentGroup(vnewgroup);
-			// 将新的邻居组加入到总块中
+			// Add the new group to the list of all groups
 			vAllGroup.addElement(vnewgroup);
 			// System.out.println("Allgroup " + vAllGroup);
 			// System.out.println("new Group" + vnewgroup);
 		}
-		// 若有邻居组则合并加入
+		// If there are existing neighbor groups, merge them
 		else if (samevaround.size() != 0) {
-			// 获得第一个邻居组，并设为最终邻居组
+			// Use the first neighbor group as the final group
 			Vector finalneighbergroup = (Vector) samevaround.elementAt(0);
 			// System.out.println("finalneighbergroup " + finalneighbergroup);
 			// System.out.println("group size " + samevaround.size());
@@ -635,18 +632,18 @@ public class ChessBoardPanel_B extends JPanel {
 
 			System.out.println((Chess_B) finalneighbergroup.elementAt(0));
 			for (int i = 1; i < samevaround.size(); i++) {
-				// 依次得到其余邻居组
+				// Get each remaining neighbor group
 				Vector neighbergroup = (Vector) samevaround.elementAt(i);
 				if (neighbergroup == finalneighbergroup)
 					continue;
-				// 依次将其余邻居组内的棋子加入到最终邻居组中
+				// Add each stone from the neighbor group into the final group
 				for (int j = 0; j < neighbergroup.size(); j++) {
 					Chess_B CP = (Chess_B) neighbergroup.elementAt(j);
 					finalneighbergroup.addElement(CP);
-					// 修改棋子邻居组标签
+					// Update group reference
 					CP.setvCurrentGroup(finalneighbergroup);
 				}
-				// 将除最终邻居组外的邻居组从总块中删除
+				// Remove merged group from the group list
 
 				vAllGroup.remove(neighbergroup);
 
@@ -654,16 +651,16 @@ public class ChessBoardPanel_B extends JPanel {
 		}
 	}
 
-	// 新增方法：直接以棋谱坐标(row, col)和当前回合（turn）落子
+	// New method: place a move directly using board coordinates (row, col) and turn
 	public int playChessAI(int row, int col, int turn) {
-		// 检查目标位置是否有棋子
+		// Check if the target location already has a stone/
 		if (ChessMap[row][col] != 0) {
 			System.out.println("位置已有棋子: " + row + "," + col);
 			return -1;
 		}
-		// 将棋谱更新
+		// Update board state
 		setChessMap(row, col, turn);
-		// 为所有棋子更新邻接组（这里使用原有逻辑）
+		// Update groups for all stones (using existing logic)
 		for (int i = 0; i < getROWS(); i++) {
 			for (int j = 0; j < getROWS(); j++) {
 				ChessPoint[i][j].setX_Map(i);
@@ -671,24 +668,22 @@ public class ChessBoardPanel_B extends JPanel {
 				GenerateGruopforsinglechess(i, j);
 			}
 		}
-		step++; // 增加手数
+		step++; // Increase move count
 
-		// 有气，落子有效
+		// If the stone has liberties, the move is valid
 		if (countAir(row, col) != 0) {
 			renewChessMap();
 			AddtoMemery(ChessMap, step, Turnflag);
 			repaint();
 			showChessMap(ChessMap);
-			// 切换回合标记
+			// Switch turns
 			if (Turnflag == 1)
 				Turnflag = -1;
 			else
 				Turnflag = 1;
 			return 1;
 		} else {
-			// 若该着法无气，则按原有逻辑处理（例如捕捉对手棋子）
-			// ...（这里可参考 playChess 方法中的逻辑）
-			// 为简单起见，若无气则撤销此着法
+			// If move has no liberties, treat it as invalid (simplified)
 			setChessMap(row, col, 0);
 			System.out.println("AI 落子无气，不合法: " + row + "," + col);
 			return -1;
@@ -725,7 +720,7 @@ public class ChessBoardPanel_B extends JPanel {
 	}
 
 	private final int[][] starPoints = {
-			{3, 3}, {9, 9}, {15, 15}, // 标准的星卫位置
+			{3, 3}, {9, 9}, {15, 15}, // Star points for standard 19x19 board
 			{3, 15}, {15, 3}, {9, 3}, {3, 9}, {15, 9}, {9, 15}
 	};
 
