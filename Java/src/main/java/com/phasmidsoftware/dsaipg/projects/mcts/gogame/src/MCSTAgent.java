@@ -187,4 +187,8 @@ public class MCSTAgent {
         }
         return bestChild.move;
     }
+
+    public static int getIterationLimit() {
+        return ITERATION_LIMIT;
+    }
 }

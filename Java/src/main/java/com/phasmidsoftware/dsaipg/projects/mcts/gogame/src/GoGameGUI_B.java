@@ -19,6 +19,7 @@ public class GoGameGUI_B implements ActionListener {
 	JButton bt_newGame;
 	JButton bt_Win;
 	JLabel jl_Turn1,jl_Turn2,jl_Step1,jl_Step2,jl_Message1,jl_Message2;
+	JLabel jl_AI_ComputationTime, jl_AI_Simulations;
 	
 	GoGameGUI_B() {
 		JFrame jf = new JFrame("Game of GO");
@@ -34,6 +35,10 @@ public class GoGameGUI_B implements ActionListener {
 	    jl_Step2=new JLabel("0");
 	    jl_Message1=new JLabel("");
 	    jl_Message2=new JLabel("");
+
+		jl_AI_ComputationTime = new JLabel("AI Time: 0 ms");
+		jl_AI_Simulations      = new JLabel("Simulations: 0");
+
 
 		// Side panel
 		JPanel jp = new JPanel();
@@ -56,6 +61,10 @@ public class GoGameGUI_B implements ActionListener {
 		// Add components to frame
 		jf.add(jp, BorderLayout.WEST);
 		jf.add(CBPanel, BorderLayout.CENTER);
+
+		jp.add(jl_AI_ComputationTime);
+		jp.add(jl_AI_Simulations);
+
 //		CBPanel.addMouseListener(new MouseAdapter() {
 //			public void mouseClicked(MouseEvent e) {
 //				// 获取当前鼠标坐标
@@ -114,8 +123,15 @@ public class GoGameGUI_B implements ActionListener {
 					// Get current board state
 					int[][] currentMap = CBPanel.getChessMap();
 					int currentTurn = CBPanel.getTurnflag();
+
+					long start = System.currentTimeMillis();
 					// Call MCSTAgent to get the best move [row, col]
 					int[] aiMove = MCSTAgent.nextMove(currentMap, currentTurn);
+					long elapsed = System.currentTimeMillis() - start;
+					int sims = MCSTAgent.getIterationLimit();
+
+					updateAIDisplay(elapsed, sims);
+
 					if (aiMove != null) {
 						System.out.println("AI placed a piece at: " + aiMove[0] + "," + aiMove[1]);
 						int aiResult = CBPanel.playChessAI(aiMove[0], aiMove[1], currentTurn);
@@ -147,6 +163,11 @@ public class GoGameGUI_B implements ActionListener {
 		System.out.println("h "+jp.getHeight()+" w "+jp.getWidth());
 		// System.out.println(CB.getWidth() + " " + CB.getHeight());
 
+	}
+
+	public void updateAIDisplay(long timeMs, int sims) {
+		jl_AI_ComputationTime.setText("AI Time: " + timeMs + " ms");
+		jl_AI_Simulations.setText("Simulations: " + sims);
 	}
 
 	@Override
