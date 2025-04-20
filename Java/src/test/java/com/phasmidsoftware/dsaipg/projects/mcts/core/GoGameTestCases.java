@@ -45,18 +45,6 @@ public class GoGameTestCases {
         assertEquals(-1, result);
     }
 
-//    @Test
-//    public void testDrawCond(){
-//        int[][] map = board.getChessMap();
-//        for(int i = 0; i < map.length; i++) {
-//            for (int j = 0; j < map[i].length; j++) {
-//                map[i][j] = (i+j)%2 == 0 ? 1:-1;
-//            }
-//        }
-//
-//        int result = board.Winner();
-//        assertEquals(0, result);
-//    }
 
     @Test
     public void testCapture(){
